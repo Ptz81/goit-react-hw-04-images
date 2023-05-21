@@ -1,39 +1,38 @@
-import { Component } from "react";
+import { useState } from "react";
 import css from './SearchBar.module.css'
 import Notiflix from 'notiflix';
 
 
-export class Searchbar extends Component {
-  state = {
-    query: '',
+
+export default function Searchbar({onSubmit}) {
+  const [query, setQuery] = useState('')
+
+  const handleInput = (e) => {
+      setQuery(e.currentTarget.value.toLowerCase());
   }
 
-  handleInput = (e) => {
-      this.setState({ query: e.currentTarget.value.toLowerCase() });
-  }
-
-  handleSubmit=(e) => {
+  const handleSubmit=(e) => {
     e.preventDefault();
-    if (this.state.query.trim() === '') {
+    if (query.trim() === '') {
       return Notiflix.Notify.failure(
       'Please, enter your request.'
     );
     }
-    this.props.onSubmit(this.state.query.trim().toLowerCase());
-    this.reset();
+    onSubmit(query.trim().toLowerCase());
+    reset();
   };
 
-  reset = () => {
-    this.setState({ query:''});
+  const reset = () => {
+    setQuery('');
   };
 
-  render() {
+
     return (
       <header
         className={css.searchbar} >
         <form
           className={css.searchForm}
-          onSubmit={this.handleSubmit}>
+          onSubmit={handleSubmit}>
           <button
             type="submit"
             className={css.searchForm_button}>
@@ -47,11 +46,11 @@ Search
       autoComplete="off"
       autoFocus
       placeholder="Search images and photos"
-      onChange={this.handleInput}
-      value={this.state.query}
+      onChange={handleInput}
+      value={query}
     />
   </form>
 </header>
   )
   }
-}
+
