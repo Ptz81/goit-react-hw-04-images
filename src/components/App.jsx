@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import Notiflix from 'notiflix';
 import { Searchbar } from "./SearchBar/Searchbar";
 import { fetchImages } from "Source/Api";
@@ -14,29 +14,30 @@ function scroll() {
     behavior: 'smooth',
   });
 }
-export class App extends Component {
-  state = {
-    query: '',
-    loader: false,
-    pictures: [],
-    openModal: false,
-    button: false,
-    page: 1,
-    modalImg: '',
-    modalAlt: '',
-  };
+export default function App() {
+  const [query, setQuery] = useState('');
+  const [loader, setLoader] = useState(false);
+  const [pictures, setPictures] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [button, setButton] = useState(false);
+  const [page, setPage] = useState(1);
+  const [modalImg, setModalImg] = useState('');
+  const [modalAlt, setModalElt] = useState('');
 
-  componentDidUpdate(prevProps, prevState) {
-    const prevQuery = prevState.query;
-    const nextQuery = this.state.query;
-    if (prevQuery !== nextQuery) {
-      this.getImages();
-    }
-  }
+  useEffect(()=>{getImages()}, [query])
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   const prevQuery = prevState.query;
+  //   const nextQuery = this.state.query;
+  //   if (prevQuery !== nextQuery) {
+  //     this.getImages();
+  //   }
+  // }
 
   getImages = () => {
-    fetchImages(this.state.query, this.state.page)
+    fetchImages(query, page)
       .then((response) => {
+        setLoader(true)
         const hits = response || [];
         this.setState((prevState) => ({
           loader: true,
@@ -51,54 +52,50 @@ export class App extends Component {
       })
       .catch((error) => console.log(error))
       .finally(() => {
-        this.setState({ loader: false });
-      });
+        loader(false) });
+      // });
   };
 
-  handleFormSubmit = (searchQuery) => {
-    this.setState({
-      query: searchQuery,
-      page: 1,
-      pictures: [],
-    });
+const handleFormSubmit = (searchQuery) => {
+    setQuery(searchQuery);
+    setPage(1);
+    setPictures([]);
   };
 
-  handlePagination = () => {
+  const handlePagination = () => {
     this.setState((prevState) => ({ page: prevState.page + 1 }), this.getImages);
   };
 
-  toggleImage = () => {
+  const toggleImage = () => {
     this.setState((prevState) => ({ openModal: !prevState.openModal }));
   };
 
 
-  handleOpenModal = (e) => {
+ const handleOpenModal = (e) => {
      if (e.target.nodeName !== 'IMG') {
       return;
     }
-  this.setState({
-    modalImg: e.target.dataset.img,
-  });
-  this.toggleImage();
+   setModalImg(e.target.dataset.img);
+  toggleImage();
 };
 
 
-  render() {
-    const { loader, pictures, openModal, button, modalImg } = this.state;
+
+    // const { loader, pictures, openModal, button, modalImg } = this.state;
 
     return (
       <div className={css.app}>
         {openModal && (
-          <Modal onClose={this.toggleImage}>
+          <Modal onClose={toggleImage}>
               <img src={modalImg} alt="#" />
           </Modal>
         )}
-        <Searchbar onSubmit={this.handleFormSubmit} />
+        <Searchbar onSubmit={handleFormSubmit} />
         {pictures.length >= 1 && (
-          <ImageGallery items={pictures} handleOpenModal={this.handleOpenModal} />
+          <ImageGallery items={pictures} handleOpenModal={handleOpenModal} />
         )}
         {button && (
-          <Button handleLoadMore={this.handlePagination} />
+          <Button handleLoadMore={handlePagination} />
         )}
         {loader && (
           <Loader className={css.loader} />
@@ -107,4 +104,3 @@ export class App extends Component {
       </div>
     );
   }
-}
