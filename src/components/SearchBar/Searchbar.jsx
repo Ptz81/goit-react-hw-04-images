@@ -4,7 +4,7 @@ import Notiflix from 'notiflix';
 
 
 
-export default function Searchbar({onSubmit}) {
+export default function Searchbar({onFormSubmit }) {
   const [query, setQuery] = useState('')
 
   const handleInput = (e) => {
@@ -18,15 +18,12 @@ export default function Searchbar({onSubmit}) {
       'Please, enter your request.'
     );
     }
-    onSubmit(query.trim().toLowerCase());
+    onFormSubmit (query.trim().toLowerCase());
     reset();
   };
-
   const reset = () => {
     setQuery('');
   };
-
-
     return (
       <header
         className={css.searchbar} >

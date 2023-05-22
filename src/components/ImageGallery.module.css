@@ -74,3 +74,9 @@ img {
   cursor: zoom-in;
 }
 
+/* To center the spinner*/
+.pos_center {
+  position: fixed;
+  top: calc(50% - 40px);
+  left: calc(50% - 40px);
+}

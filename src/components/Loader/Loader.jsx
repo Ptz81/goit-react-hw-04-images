@@ -1,19 +1,20 @@
-import React from 'react'
-import ContentLoader from 'react-content-loader'
+import React from 'react';
+import css from './Loader.module.css'
+// import ContentLoader from 'react-content-loader'
 
-const Loader = props => (
-  <ContentLoader
-    viewBox="0 0 400 160"
-    height={160}
-    width={400}
-    dur={500}
-    backgroundColor="transparent"
-    {...props}
-  >
-    <circle cx="150" cy="86" r="8" />
-    <circle cx="194" cy="86" r="8" />
-    <circle cx="238" cy="86" r="8" />
-  </ContentLoader>
-)
-
+// const Loader = props => (
+//   <ContentLoader
+//  height={140}
+//     speed={1}
+//     backgroundColor={'#333'}
+//     foregroundColor={'#999'}
+//     viewBox="0 0 380 70"
+//   >
+//     {/* Only SVG shapes */}
+//     <rect x="0" y="0" rx="5" ry="5" width="70" height="70" />
+//     <rect x="80" y="17" rx="4" ry="4" width="300" height="13" />
+//     <rect x="80" y="40" rx="3" ry="3" width="250" height="10" />
+//   </ContentLoader>
+// )
+const Loader= () => <div className={css.loader}></div>;
 export default Loader
